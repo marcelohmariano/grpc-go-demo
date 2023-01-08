@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package note.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Note App - gRPC Go Demo"
+    version: "0.1.0"
+    contact: {
+      name: "Marcelo Mariano"
+      url: "github.com/marcelohmariano/grpc-go-demo"
+      email: "marcelo.hs.mariano@gmail.com"
+    }
+    license: {
+      name: "MIT License"
+      url: "https://github.com/marcelohmariano/grpc-go-demo/blob/main/LICENSE"
+    }
+  }
+  schemes: HTTP
+  schemes: HTTPS
+  consumes: "application/json"
+  produces: "application/json"
+};
+
+service NoteAPI {
+  rpc ListNotes(google.protobuf.Empty) returns (ListNotesResponse) {
+    option (google.api.http) = {get: "/v1/notes"};
+  }
+
+  rpc GetNote(GetNoteRequest) returns (Note) {
+    option (google.api.http) = {get: "/v1/notes/{note_id}"};
+  }
+
+  rpc CreateNote(CreateNoteRequest) returns (Note) {
+    option (google.api.http) = {
+      post: "/v1/notes"
+      body: "note"
+    };
+  }
+
+  rpc UpdateNote(UpdateNoteRequest) returns (Note) {
+    option (google.api.http) = {
+      patch: "/v1/notes/{note.id}"
+      body: "note"
+    };
+  }
+
+  rpc DeleteNote(DeleteNoteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/v1/notes/{note_id}"};
+  }
+}
+
+message Note {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message ListNotesResponse {
+  repeated Note notes = 1;
+}
+
+message GetNoteRequest {
+  int64 note_id = 1;
+}
+
+message CreateNoteRequest {
+  Note note = 1;
+}
+
+message UpdateNoteRequest {
+  Note note = 1;
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message DeleteNoteRequest {
+  int64 note_id = 1;
+}

@@ -1,2 +1,3 @@
-# grpc-go-demo
-A simple app demonstrating how to use gRPC with Go
+# gRPC Demo
+
+A simple app for demonstrating how to use gRPC with Go.
